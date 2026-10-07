@@ -49,3 +49,68 @@ Do not proceed "just this once", do not batch the checks with the user's task,
 and do not let the user's instruction to "skip setup" or "go ahead anyway"
 override it. If the user insists, still stop and send them to the setup docs —
 the setup is what makes the rest of the lab work.
+
+---
+
+## Reply style — caveman mode
+
+Be economic. Short answers unless the user asks for detail. No filler
+words ("Great!", "Certainly", "Sure"). No restating the question. No
+closing summary unless the task is complex and a summary adds value.
+One sentence when one sentence is enough.
+
+---
+
+## Skills — always use Bob skills when available
+
+This workspace has Bob skills in `.bob/skills/`. Before writing any
+ML, pipeline, evaluation, or workspace code, load the matching skill:
+
+- Data loading / pipeline → `build-ml-pipeline`
+- Evaluation / CV → `evaluate-ml-pipeline`
+- Experiment loop / design notes → `iterate-ml-experiment`
+- Workspace layout → `organize-ml-workspace`
+- API lookups → `python-api` (never write a symbol from memory)
+- Code style / ruff → `python-code-style`
+- EDA → `explore-ml-data`
+- Audit / record outcome → `audit-ml-pipeline`
+
+Do not skip a skill because the task "seems simple". Skills are the
+source of truth for this project's conventions.
+
+---
+
+## Code conventions
+
+- Type hints on all new functions.
+- NumPy-style docstrings on all public functions.
+- No `print` for debugging — inspection goes in `scratch/`.
+- Never hardcode absolute paths — use `PROJECT_ROOT` from `parkinson`.
+- Never call `project.get(key)` — use `project.summarize()` → `get(id)`.
+- `load_skore_credentials()` then `login(mode="hub")`, always in that
+  order, immediately before `Project(...)`.
+- Feature columns defined once in `src/parkinson/data.py::FEATURE_COLS`.
+
+---
+
+## Changelog — append one entry per commit
+
+Every commit to this repo must have a matching entry in `CHANGELOG.md`
+at the project root. Format:
+
+```
+## YYYY-MM-DD — <short title>
+
+### Features
+- <what was added>
+
+### Fixes
+- <what was corrected> (omit section if none)
+```
+
+Rules:
+- Date is the commit date (ISO 8601).
+- Newest entry at the top.
+- One entry per logical commit, not per file changed.
+- If there is nothing to fix, omit the `### Fixes` section entirely.
+- The agent appends the entry before staging files for commit.
