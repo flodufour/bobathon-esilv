@@ -5,6 +5,17 @@ Format: `## YYYY-MM-DD — <title>` with `### Features` and `### Fixes` sections
 
 ---
 
+## 2026-10-07 — 04_hgbt: HistGradientBoosting with categorical features
+
+### Features
+- Added `FEATURE_COLS_HGBT`, `load_dataset_hgbt()`, `load_dataset_hgbt_with_groups()`, `load_test_dataset_hgbt()` to `src/parkinson/data.py` — 10-column feature set with `cohort`/`gene` as `pandas.Categorical`
+- Added `build_hgbt_learner()` to `src/parkinson/pipeline.py` — `HistGradientBoostingRegressor(categorical_features="from_dtype", random_state=0)`, no imputer
+- Added `experiments/04_hgbt.py` — GroupKFold-5 evaluation, hub key `04_hgbt`, writes `submissions/04_hgbt.csv`
+- Added `tests/smoke/test_04_hgbt.py` — patient-split row-count and NaN-safety assertions
+- Added `journal/04_hgbt.md` — done, RMSE 7.75 ± 0.15 (GroupKFold-5)
+
+---
+
 ## 2026-10-07 — 03_ridge_grouped_cv: patient-grouped CV experiment
 
 ### Features
