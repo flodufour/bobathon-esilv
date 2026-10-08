@@ -1,8 +1,9 @@
 # %% [markdown]
-# # Experiment 01 — Dummy baseline
+# # Experiment 02 — Ridge regression
 #
 # **Date:** 2026-10-07
-# **Goal:** Establish the mean-prediction RMSE floor on an 80/20 row holdout.
+# **Goal:** Measure how much linear structure the 8 clinical features
+# contain by replacing the dummy mean baseline with a Ridge regression.
 # **Result:** filled in after the run.
 
 # %%
@@ -13,21 +14,22 @@ from parkinson import PROJECT_ROOT
 from parkinson.data import load_dataset, load_test_dataset
 from parkinson.evaluate import splitter
 from parkinson.hub import load_skore_credentials
-from parkinson.pipeline import build_learner
+from parkinson.pipeline import build_ridge_learner
 
 # %% [markdown]
 # ## Load data and build the learner
 
 # %%
 X, y = load_dataset()
-learner = build_learner()
+learner = build_ridge_learner()
 
 # %% [markdown]
 # ## Evaluate
 #
 # `skore.evaluate` runs the learner on the 80/20 holdout and returns an
-# `EstimatorReport`.  The report stores predictions, metrics, and
-# diagnostic plots.  We then print the RMSE from the held-out 20 %.
+# `EstimatorReport`.  We then print the RMSE from the held-out 20 %.
+# The same `splitter=0.2` is used as for 01_dummy so the two numbers
+# are directly comparable (same random holdout fraction, same data).
 
 # %%
 report = skore.evaluate(learner, X=X, y=y, splitter=splitter)
@@ -39,7 +41,7 @@ print(f"RMSE (80/20 holdout): {rmse:.4f}")
 #
 # `load_skore_credentials()` reads `.skore` and exports the API key as an
 # environment variable so `login(mode="hub")` does not open a browser.
-# The project name is `bobathon-esilv` and the report key is `01_dummy`.
+# The project name is `bobathon-esilv` and the report key is `02_ridge`.
 
 # %%
 cfg = load_skore_credentials()
@@ -49,27 +51,29 @@ project = skore.Project(
     mode="hub",
     workspace=cfg["workspace"],
 )
-project.put("01_dummy", report)
+project.put("02_ridge", report)
 
 hub_base = cfg["hub_url"].replace("api.", "")
-report_url = f"{hub_base}/{cfg['workspace']}/projects/bobathon-esilv/reports/01_dummy"
+report_url = f"{hub_base}/{cfg['workspace']}/projects/bobathon-esilv/reports/02_ridge"
 print(f"Skore Hub report URL: {report_url}")
 
 # %% [markdown]
 # ## Kaggle submission
 #
 # Refit on all training rows (no CV split) and write predictions for the
-# test set to `submissions/01_dummy.csv`.
+# test set to `submissions/02_ridge.csv`.  The learner is refit from
+# scratch on all available training data — the CV report above is kept
+# separate and not reused here.
 
 # %%
 submissions_dir = PROJECT_ROOT / "submissions"
 submissions_dir.mkdir(exist_ok=True)
 
 X_test = load_test_dataset()
-final = build_learner()
+final = build_ridge_learner()
 final.fit(X, y)
 X_test_features = X_test[[c for c in X.columns if c in X_test.columns]]
 submission = X_test[["Index"]].copy()
 submission["target"] = final.predict(X_test_features)
-submission.to_csv(submissions_dir / "01_dummy.csv", index=False)
-print(f"Submission written to submissions/01_dummy.csv ({len(submission)} rows)")
+submission.to_csv(submissions_dir / "02_ridge.csv", index=False)
+print(f"Submission written to submissions/02_ridge.csv ({len(submission)} rows)")
