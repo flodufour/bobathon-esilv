@@ -9,8 +9,8 @@ in order: Status, Data understanding (EDA), History, Backlog.
 
 - **Project / dataset:** Parkinson's disease MDS-UPDRS motor score — tabular regression
 - **Goal:** minimize RMSE for the true OFF MDS-UPDRS motor score, on patients held out from training
-- **Last experiment:** 02_ridge — done
-- **Last result:** RMSE 10.49 (80/20 row holdout)
+- **Last experiment:** 03_ridge_grouped_cv — done
+- **Last result:** RMSE 10.60 ± 0.27 (GroupKFold-5, patient-grouped)
 
 - **Workspace decisions** (immutable unless the user pivots):
   - tabular library: pandas - recorded: 2026-10-07
@@ -36,6 +36,7 @@ in order: Status, Data understanding (EDA), History, Backlog.
 |---|---|---|---|---|
 | `01_dummy` | DummyRegressor(strategy="mean") as the RMSE floor on an 80/20 row holdout | done | RMSE 16.4779 (80/20 row holdout) | [design note](01_dummy.md) |
 | `02_ridge` | Ridge regression on the same 8 features and 80/20 row holdout — first linear model | done | RMSE 10.49 (80/20 row holdout) | [design note](02_ridge.md) |
+| `03_ridge_grouped_cv` | Same Ridge pipeline with GroupKFold(5) on patient_id — honest generalisation estimate | done | RMSE 10.60 ± 0.27 (GroupKFold-5) | [design note](03_ridge_grouped_cv.md) |
 
 ## Backlog
 

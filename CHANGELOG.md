@@ -5,6 +5,17 @@ Format: `## YYYY-MM-DD — <title>` with `### Features` and `### Fixes` sections
 
 ---
 
+## 2026-10-07 — 03_ridge_grouped_cv: patient-grouped CV experiment
+
+### Features
+- Added `load_dataset_with_groups()` to `src/parkinson/data.py` — returns `(X, y, groups)` with `patient_id` for grouped splitters
+- Added `grouped_splitter` (`GroupKFold(n_splits=5)`) to `src/parkinson/evaluate.py`
+- Added `experiments/03_ridge_grouped_cv.py` — Ridge with patient-grouped CV, hub key `03_ridge_grouped_cv`, writes `submissions/03_ridge_grouped_cv.csv`
+- Added `tests/smoke/test_03_ridge_grouped_cv.py` — patient-split row-count and NaN-safety assertions
+- Added `journal/03_ridge_grouped_cv.md` — done, RMSE 10.60 ± 0.27 (GroupKFold-5)
+
+---
+
 ## 2026-10-07 — 02_ridge: Ridge regression experiment
 
 ### Features
