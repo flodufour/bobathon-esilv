@@ -46,6 +46,6 @@ Does predicting the training-mean true-OFF score for every visit
 ## Status
 
 - **State:** done
-- **Approved by user on:** 2025-07-14
+- **Approved by user on:** 2026-10-07
 - **Headline result:** RMSE 16.4779 (80/20 row holdout)
 - **Implication for next iteration:** The mean baseline predicts ~16.5 points off on the MDS-UPDRS scale. Any model using the features should substantially beat this. A Ridge regression on the same features (02_ridge) is the natural next step to see how much linear structure is present.
