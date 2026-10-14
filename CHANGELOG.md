@@ -5,6 +5,43 @@ Format: `## YYYY-MM-DD — <title>` with `### Features` and `### Fixes` sections
 
 ---
 
+## 2026-10-07 — 06_dataops: skrub DataOps with groups baked into the graph
+
+### Features
+- Added `load_visits()` to `src/parkinson/data.py` — returns the raw merged DataFrame for use as DataOps graph source
+- Added `build_dataops_learner()` to `src/parkinson/pipeline.py` — SkrubLearner with `GroupKFold(5)` + `patient_id` wired at `mark_as_X`, `TableVectorizer` + HGBR
+- Added `experiments/06_dataops.py` — evaluates via `skore.evaluate(learner, data={"visits": visits})`, pushes report to Skore Hub as `06_dataops`, writes `submissions/06_dataops.csv`
+- Added `tests/smoke/test_06_dataops.py` — patient-grouped smoke test using env-dict fit/predict
+- Fixed `build_dataops_learner`: use `drop(columns=[...], errors="ignore")` to handle test set without `target` column
+- Recorded headline result: RMSE 7.5389 ± 0.1436 (GroupKFold-5, patient-grouped)
+
+---
+
+
+## 2026-10-07 — 05_tabular_pipeline: skrub mixed-type features
+
+### Features
+- Added `load_full_dataset()` to `src/parkinson/data.py` — returns all clinical columns (numeric + categorical) excluding `Index` and `patient_id`, with patient groups
+- Added `_ID_COLS` constant to `src/parkinson/data.py` for consistent identifier exclusion
+- Added `build_tabular_learner()` to `src/parkinson/pipeline.py` — returns `skrub.tabular_pipeline("regressor")` (TableVectorizer + HGBR)
+- Added `experiments/05_tabular_pipeline.py` — evaluates with GroupKFold-5, pushes report to Skore Hub as `05_tabular_pipeline`, writes `submissions/05_tabular_pipeline.csv`
+- Added `tests/smoke/test_05_tabular_pipeline.py` — patient-grouped smoke test (row count + NaN assertions)
+- Recorded headline result: RMSE 7.5182 ± 0.1413 (GroupKFold-5, patient-grouped)
+
+---
+
+
+## 2026-10-07 — 04_hgbr: HistGradientBoosting with native NaN handling
+
+### Features
+- Added `build_hgbr_learner()` to `src/parkinson/pipeline.py` — returns `HistGradientBoostingRegressor(random_state=0)` without imputation
+- Added `experiments/04_hgbr.py` — evaluates HGBR with GroupKFold-5 on `patient_id`, pushes report to Skore Hub as `04_hgbr`, writes `submissions/04_hgbr.csv`
+- Added `tests/smoke/test_04_hgbr.py` — patient-grouped smoke test (row count + NaN assertions)
+- Recorded headline result: RMSE 7.7556 ± 0.1528 (GroupKFold-5, patient-grouped)
+
+---
+
+
 ## 2026-10-07 — 03_ridge_grouped_cv: patient-grouped CV experiment
 
 ### Features
